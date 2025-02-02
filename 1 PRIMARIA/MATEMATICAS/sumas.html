@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Sumas para Niños de 1º</title>
+  <style>
+    body {
+      font-family: 'Arial', sans-serif;
+      background-color: #f4f4f4;
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      margin: 0;
+      padding: 20px;
+      min-height: 100vh;
+    }
+    h1 {
+      color: #333;
+      margin-bottom: 20px;
+    }
+    .additions {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      width: 100%;
+      max-width: 600px;
+      background-color: #fff;
+      padding: 20px;
+      border-radius: 10px;
+      box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    }
+    .addition {
+      margin: 10px 0;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      width: 100%;
+    }
+    .addition span {
+      font-size: 18px;
+      margin-right: 10px;
+    }
+    .addition input {
+      width: 60px;
+      padding: 5px;
+      font-size: 16px;
+      text-align: center;
+      border: 1px solid #ccc;
+      border-radius: 5px;
+    }
+    .buttons {
+      margin-top: 20px;
+      display: flex;
+      justify-content: center;
+      gap: 10px;
+    }
+    button {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 5px;
+      cursor: pointer;
+      background-color: #007bff;
+      color: white;
+      transition: background-color 0.3s ease;
+    }
+    button:hover {
+      background-color: #0056b3;
+    }
+    .correct {
+      background-color: #d4edda !important;
+      border-color: #c3e6cb !important;
+    }
+    .incorrect {
+      background-color: #f8d7da !important;
+      border-color: #f5c6cb !important;
+    }
+  </style>
+</head>
+<body>
+  <h1>Escribe el resultado</h1>
+  <div class="additions" id="additions"></div>
+  <div class="buttons">
+    <button onclick="checkAnswers()">Comprobar</button>
+    <button onclick="generateAdditions()">Reiniciar</button>
+  </div>
+
+  <script>
+    function getRandomInt(min, max) {
+      return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+
+    function generateAdditions() {
+      const container = document.getElementById('additions');
+      container.innerHTML = '';
+      const usedCombinations = new Set();
+
+      while (usedCombinations.size < 5) {
+        const num1 = getRandomInt(1, 10);
+        const num2 = getRandomInt(1, 10);
+        const combination = `${num1}+${num2}`;
+
+        if (!usedCombinations.has(combination)) {
+          usedCombinations.add(combination);
+          const div = document.createElement('div');
+          div.className = 'addition';
+          div.innerHTML = `
+            <span>${num1} + ${num2} = </span>
+            <input type="number" data-answer="${num1 + num2}" oninput="validateInput(this)">
+          `;
+          container.appendChild(div);
+        }
+      }
+    }
+
+    function validateInput(input) {
+      input.value = input.value.replace(/[^0-9]/g, '');
+    }
+
+    function checkAnswers() {
+      const inputs = document.querySelectorAll('.addition input');
+      inputs.forEach(input => {
+        const correctAnswer = input.getAttribute('data-answer');
+        if (input.value == correctAnswer) {
+          input.classList.remove('incorrect');
+          input.classList.add('correct');
+        } else {
+          input.classList.remove('correct');
+          input.classList.add('incorrect');
+        }
+      });
+    }
+
+    // Generate initial set of additions
+    generateAdditions();
+  </script>
+</body>
+</html>
